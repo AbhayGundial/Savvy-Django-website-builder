@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags %}
+{% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags %}
+
+{% block content %}
+
+{% if blog.feed_image %}
+{% block og_image %}
+{% image self.feed_image width-1200 as img %}
+<meta property="og:image" content="{{ site_name }}{{ img.url }}" />
+<meta property="og:type" content="article" />
+{% endblock %} 
+{% endif %}
+    <div id="all">
+      <div class="container-fluid">
+        <div class="row row-offcanvas row-offcanvas-left"> 
+          <!--   *** SIDEBAR ***-->
+          <div id="sidebar" class="col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
+            <div class="sidebar-content">
+              <h1 class="sidebar-heading"> <a href="index.html">Savvy</a></h1>
+              <p class="sidebar-p">Website builder </p>
+              <p class="sidebar-p">Blah blah</p>
+              <ul class="sidebar-menu"> 
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+              </ul>
+              <p class="social"><a href="#" data-animate-hover="pulse" class="external facebook"><i class="fa fa-facebook"></i></a><a href="#" data-animate-hover="pulse" class="external gplus"><i class="fa fa-google-plus"></i></a><a href="#" data-animate-hover="pulse" class="external twitter"><i class="fa fa-twitter"></i></a><a href="#" title="" class="external instagram"><i class="fa fa-instagram"></i></a><a href="#" data-animate-hover="pulse" class="email"><i class="fa fa-envelope"></i></a></p>
+              
+            </div>
+          </div>
+          <!--   *** SIDEBAR END ***  -->
+          <!--   *** DETAIL ***-->
+          <div class="col-xs-12 col-sm-8 col-md-9 content-column white-background">
+            <div class="small-navbar visible-xs">
+              <button type="button" data-toggle="offcanvas" class="btn btn-ghost pull-left"> <i class="fa fa-align-left"> </i>Menu</button>
+              <h1 class="small-navbar-heading"> <a href="index.html">Creative </a></h1>
+            </div>
+            <div class="row">
+              <div class="col-lg-8">
+                <div class="content-column-content">
+                  <h1>{{ self.title }}</h1>
+                  <p class="lead">{{ self.intro }}</p>
+                  <div id="main-slider">
+                  {% if carousel_items %}
+                  <div class="item">
+                      {% for carousel_item in carousel_items %}
+                          <li>
+                               {% if carousel_item.link %}<a href="{{ carousel_item.link }}" target="_blank">{% endif %}
+                               
+                                {% if carousel_item.embed_url %}
+                                    {{ carousel_item.embed_url|embed:1000 }}
+                                {% else %}
+                                  {% image carousel_item.image width-1400 as carousel_imagedata %}
+                                      <img class="rsImg" src="{{ carousel_imagedata.url }}" title="{{ carousel_item.caption }}" alt="{{ carousel_imagedata.alt }}"/>
+                                 {% endif %}
+                               {% if carousel_item.link %}</a>{% endif %}
+                          </li>
+                      {% endfor %}
+                  </div>
+                  {% endif %}
+
+                  </div>
+                  {{ self.body }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
