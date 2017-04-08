@@ -5,6 +5,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
 
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailimages.models import Image
 
 from wagtail.wagtailsearch import index
 
@@ -49,7 +50,7 @@ class BlogIndexPage(Page):
 
         # Pagination
         page = request.GET.get('page')
-        paginator = Paginator(blogs, 10)  # Show 10 blogs per page
+        paginator = Paginator(blogs, 3)  # Show 3 blogs per page
         try:
             blogs = paginator.page(page)
         except PageNotAnInteger:
@@ -91,7 +92,14 @@ class BlogPage(Page):
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     date = models.DateField("Post date")
     feed_image = models.ForeignKey(
-        'wagtailimages.Image',
+        Image,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    image = models.ForeignKey(
+        Image,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -112,6 +120,7 @@ BlogPage.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
+    ImageChooserPanel('image'),
     InlinePanel('carousel_items', label="Carousel items"),
     InlinePanel('related_links', label="Related links"),
 ]
@@ -120,3 +129,33 @@ BlogPage.promote_panels = Page.promote_panels + [
     ImageChooserPanel('feed_image'),
     FieldPanel('tags'),
 ]
+
+
+class About(Page):
+   
+    intro = RichTextField()
+    body = RichTextField()
+    
+    image = models.ForeignKey(
+        Image,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
+    search_fields = Page.search_fields + (
+        index.SearchField('body'),
+    )
+
+    
+
+About.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    ImageChooserPanel('image'),
+   
+]
+
+About.promote_panels = Page.promote_panels 

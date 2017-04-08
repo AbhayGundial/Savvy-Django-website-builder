@@ -10,19 +10,7 @@
       <div class="container-fluid">
         <div class="row row-offcanvas row-offcanvas-left"> 
           <!--   *** SIDEBAR ***-->
-          <div id="sidebar" class="col-xs-6 col-sm-4 col-md-3 sidebar-offcanvas">
-            <div class="sidebar-content">
-              <h1 class="sidebar-heading"> <a href="index.html">Savvy</a></h1>
-              <p class="sidebar-p">Website Builder </p>
-              <p class="sidebar-p">Blah blah blah </p>
-              <ul class="sidebar-menu"> 
-                <li class="active"><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-              </ul>
-              <p class="social"><a href="#" data-animate-hover="pulse" class="external facebook"><i class="fa fa-facebook"></i></a><a href="#" data-animate-hover="pulse" class="external gplus"><i class="fa fa-google-plus"></i></a><a href="#" data-animate-hover="pulse" class="external twitter"><i class="fa fa-twitter"></i></a><a href="#" title="" class="external instagram"><i class="fa fa-instagram"></i></a><a href="#" data-animate-hover="pulse" class="email"><i class="fa fa-envelope"></i></a></p> 
-            </div>
-          </div>
+         {% include "blog/includes/sidebar.html" %}
           <!--   *** SIDEBAR END ***  -->
           <!--   *** PORTFOLIO ***-->
           <div class="col-xs-12 col-sm-8 col-md-9 content-column">
@@ -35,29 +23,31 @@
                 <h4>Showing posts tagged as {{ request.GET.tag|safe }} <a href=" {% pageurl self %} ">Show all</a></h4>
             {% endif %}
 
-            {% for blog in blogs %}
+            
                 
             <div class="grid">
               <div class="row">
+              {% for blog in blogs %}
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 masonry-item"> 
                   <div class="box-masonry"><a href="{% pageurl blog %}" title="" class="box-masonry-image with-hover-overlay with-hover-icon">
-                    {% if blog.feed_image %}
-                    {% image blog.feed_image fill-100x100 %}
+                    {% if blog.image %}
+                    {% image blog.image fill-300x300 %}
                     {% endif %}
                   </a>
                     <div class="box-masonry-text">
-                      <h4> <a href="detail.html">{{ blog.intro|richtext }}</a></h4>
+                      <h4> {{ blog.intro|richtext }}</h4>
                       <div class="box-masonry-desription">
-                        <p>{{ blog.search_description }}  </p>
+                        <p>{{ blog.date }}  </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>  
-            </div>
-            {% empty %}
+                {% empty %}
                     No blogs found
                 {% endfor %}
+              </div>  
+            </div>
+            
 
                 <div class="row">    
               <ul class="pagination text-center" role="navigation" aria-label="Pagination">
